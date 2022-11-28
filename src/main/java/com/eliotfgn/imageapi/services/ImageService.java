@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,11 +17,10 @@ import java.util.UUID;
 @Slf4j
 public class ImageService {
 
-    private ImageRepository imageRepository;
+    private final ImageRepository imageRepository;
 
-    public Image upload(MultipartFile file) {
+    public String upload(MultipartFile file) {
         byte [] data = null;
-        String url = "";
         String name = file.getName();
         String type = file.getContentType();
         Long size = file.getSize();
@@ -32,10 +32,10 @@ public class ImageService {
             log.error("Cannot upload image.");
         }
 
-        Image image = new Image(id, name, type, size, data, url);
+        Image image = new Image(id, name, type, size, data, getImageUrl(id));
 
         imageRepository.save(image);
-        return image;
+        return "Uploaded successfully !";
     }
 
     public Image getImage(UUID id) {
@@ -45,4 +45,13 @@ public class ImageService {
     public List<Image> getImages() {
         return imageRepository.findAll();
     }
+
+    private String getImageUrl(UUID id) {
+        return ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/api/images/")
+                .path(id.toString())
+                .toUriString();
+    }
+
 }
