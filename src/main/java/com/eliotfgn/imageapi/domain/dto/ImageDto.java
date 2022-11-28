@@ -17,5 +17,6 @@ public class ImageDto implements Serializable {
     private final UUID id;
     private final String name;
     private final String type;
+    private final Long size;
     private final String url;
 }

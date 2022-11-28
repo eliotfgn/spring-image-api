@@ -20,6 +20,7 @@ public class Image {
     private UUID id;
     private String name;
     private String type;
+    private Long size;
     @Lob
     private byte[] data;
     private String url;
